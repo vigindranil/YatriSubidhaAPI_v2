@@ -3,7 +3,9 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 
-import authRoutes from './src/routes/auth.js';
+import authRoute from './src/routes/auth.js';
+import slotRoute from './src/routes/slotRoute.js';
+import userRoute from './src/routes/userRoute.js';
 
 dotenv.config();
 // const authRoutes = require('./src/routes/auth');
@@ -14,7 +16,9 @@ app.use(express.json());
 app.use(cors());
 // routes
 // app.use('/api/auth', authRoutes);
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', authRoute);
+app.use('/api/user/slot', slotRoute);
+app.use('/api/user/', userRoute);
 
 app.get('/', (req, res) => res.send('API is running'));
 
