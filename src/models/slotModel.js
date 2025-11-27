@@ -27,3 +27,13 @@ export async function getDepSlotBookingDetailsByLoginUserModel(StartDate, EndDat
         throw error;
     }
 }
+
+export async function getDepartureBookingDetailsByTokenNumberModel(TokenNo, AuthInfo) {
+    try {
+        const response = await pool.query(`CALL sp_getDepartureBookingDetailsByTokenNumber(?,?,@ErrorCode)`, [TokenNo, AuthInfo]);
+        const [rows] = await pool.query("SELECT @ErrorCode AS ErrorCode");
+        return response[0][0];
+    } catch (error) {
+        throw error;
+    }
+}

@@ -1,4 +1,4 @@
-import { getAvailableSlotByDateModel, getDepSlotBookingDetailsByLoginUserModel } from "../models/slotModel.js";
+import { getAvailableSlotByDateModel, getDepartureBookingDetailsByTokenNumberModel, getDepSlotBookingDetailsByLoginUserModel } from "../models/slotModel.js";
 
 
 export async function getAvailableSlotByDate(req, res) {
@@ -58,6 +58,44 @@ export async function getDepSlotBookingDetailsByLoginUser(req, res) {
         .json({ success: false, message: "Missing required fields" });
     }
     const result = await getDepSlotBookingDetailsByLoginUserModel(StartDate, EndDate, UserID, authInfo);
+
+    if (!result) {
+      return res
+        .status(500)
+        .json({ success: false, message: "Failed to fetch booking details" });
+    }
+    if (result.length === 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "No booking details found", data: null });
+    }
+    // Success
+    return res.status(200).json({
+      success: true,
+      message: "Booking details fetched successfully",
+      data: result
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message
+    });
+  }
+}
+export async function getDepartureBookingDetailsByTokenNumber(req, res) {
+  try {
+    if (!req) {
+      return res.status(400).json({ success: false, message: "Invalid request" });
+    }
+    const { TokenNo, AuthInfo } = req.body;
+
+    if (!TokenNo || !AuthInfo) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Missing required fields" });
+    }
+    const result = await getDepartureBookingDetailsByTokenNumberModel(TokenNo, AuthInfo);
 
     if (!result) {
       return res
