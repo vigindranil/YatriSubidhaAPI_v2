@@ -6,6 +6,7 @@ import cors from "cors";
 import authRoute from './src/routes/auth.js';
 import slotRoute from './src/routes/slotRoute.js';
 import userRoute from './src/routes/userRoute.js';
+import adminRoute from './src/routes/admin.js';
 
 dotenv.config();
 // const authRoutes = require('./src/routes/auth');
@@ -19,6 +20,7 @@ app.use(cors());
 app.use('/api/auth', authRoute);
 app.use('/api/user/slot', slotRoute);
 app.use('/api/user/', userRoute);
+app.use('/api/admin', adminRoute);
 
 app.get('/', (req, res) => res.send('API is running'));
 
