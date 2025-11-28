@@ -1,5 +1,5 @@
-import { getDepartureCountModel } from "../models/adminModel.js";
-
+import { getAdminLoginDetailsModel, getDepartureCountModel } from "../models/adminModel.js";
+import jwt from "jsonwebtoken";
 
 export async function getDepartureCount(req, res) {
     try {
@@ -45,6 +45,65 @@ export async function getDepartureCount(req, res) {
         return res.status(500).json({
             success: false,
             message: "Server error",
+            error: error.message,
+        });
+    }
+}
+
+export async function getAdminLoginDetails(req, res) {
+    try {
+        if (!req) {
+            return res.status(400).json({ success: false, message: "Invalid request" });
+        }
+
+        const { UserName, Password, UserTypeID, AuthInfo } = req.body;
+
+        if (!UserName, !Password, !UserTypeID, !AuthInfo) {
+            return res.status(400).json({
+                success: false,
+                message: "Missing required fields",
+            });
+        }
+
+        const result = await getAdminLoginDetailsModel(UserName, Password, UserTypeID, AuthInfo);
+
+        if (!result) {
+            return res.status(500).json({
+                success: false,
+                message: "Wrong Credentials, Please check username and password",
+            });
+        }
+
+        // // 🔐 Generate JWT Token (Include UserID in Payload)
+        const authToken = jwt.sign(
+            {
+                user_id: result?.UserID,
+                user_name: result?.UserName,
+                user_type_id: result?.UserTypeID,
+                user_full_name: result?.UserFullName,
+
+            },                   // Payload Data
+            process.env.JWT_SECRET_KEY,   // Secret Key from .env
+            { expiresIn: process.env.JWT_EXPIRES_IN }           // Expiry Time
+        );
+
+        // ✅ OTP Success Response with Token
+        return res.status(200).json({
+            success: true,
+            message: "Login Successfully",
+            data: {
+                user_id: result?.UserID,
+                user_name: result?.UserName,
+                user_type_id: result?.UserTypeID,
+                user_full_name: result?.UserFullName,
+                authToken,
+            }
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error",
             error: error.message,
         });
     }

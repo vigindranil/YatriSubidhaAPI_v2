@@ -4,8 +4,8 @@ import nodemailer from "nodemailer";
 
 export async function generateOTP(req, res) {
   try {
-    if(!req){
-        return res.status(400).json({ success: false, message: "Invalid request" });
+    if (!req) {
+      return res.status(400).json({ success: false, message: "Invalid request" });
     }
     const { userNameTypeID, userName, authInfo } = req.body;
     if (!userNameTypeID || !userName || !authInfo) {
@@ -20,10 +20,10 @@ export async function generateOTP(req, res) {
 
     const { IsOTP, ErrorCode } = result;
 
-    if(userNameTypeID == 1){
-        return res.status(400).json({ success: false, message: "Mobile number based login is currently disabled" });
+    if (userNameTypeID == 1) {
+      return res.status(400).json({ success: false, message: "Mobile number based login is currently disabled" });
     } else {
-         // 🔧 Setup Mail Transporter
+      // 🔧 Setup Mail Transporter
       // const transporter = nodemailer.createTransport({
       //   host: process.env.MAIL_HOST,       // smtp.gmail.com / your smtp host
       //   port: process.env.MAIL_PORT,       // 465 (secure) / 587 (TLS)
@@ -57,10 +57,10 @@ export async function generateOTP(req, res) {
     if (ErrorCode !== 0) {
       return res
         .status(400)
-        .json({ success: false, message: "Failed to generate OTP"});
+        .json({ success: false, message: "Failed to generate OTP" });
     }
-    if(ErrorCode === 0 && IsOTP){
-        return res.status(200).json({ success: true, message: "OTP generated successfully", data: {OTP: IsOTP} });
+    if (ErrorCode === 0 && IsOTP) {
+      return res.status(200).json({ success: true, message: "OTP generated successfully", data: { OTP: IsOTP } });
     }
   } catch (error) {
     return res

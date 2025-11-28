@@ -7,6 +7,7 @@ import authRoute from './src/routes/auth.js';
 import slotRoute from './src/routes/slotRoute.js';
 import userRoute from './src/routes/userRoute.js';
 import adminRoute from './src/routes/admin.js';
+import adminAuthRoute from './src/routes/adminAuth.js';
 
 dotenv.config();
 // const authRoutes = require('./src/routes/auth');
@@ -18,6 +19,7 @@ app.use(cors());
 // routes
 // app.use('/api/auth', authRoutes);
 app.use('/api/auth', authRoute);
+app.use('/api/admin/auth', adminAuthRoute);
 app.use('/api/user/slot', slotRoute);
 app.use('/api/user/', userRoute);
 app.use('/api/admin', adminRoute);
