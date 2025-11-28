@@ -68,7 +68,7 @@ export async function getAdminLoginDetails(req, res) {
         const result = await getAdminLoginDetailsModel(UserName, Password, UserTypeID, AuthInfo);
 
         if (!result) {
-            return res.status(500).json({
+            return res.status(400).json({
                 success: false,
                 message: "Wrong Credentials, Please check username and password",
             });

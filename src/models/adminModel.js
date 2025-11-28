@@ -20,10 +20,13 @@ export async function getAdminLoginDetailsModel(UserName, Password, UserTypeID, 
     try {
         const [rows] = await pool.query('CALL sp_getAdminLoginDetails(?,?,?,?,@ErrorCode)', [UserName, Password, UserTypeID, AuthInfo]);
 
-        console.log(rows[0]);
-        
+        if (rows) {
+            return null;
+        }
         return rows[0][0] ?? null; // same as return $query->row()
     } catch (error) {
+        console.log(error);
+
         throw error;
     }
 }
