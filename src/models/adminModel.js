@@ -20,7 +20,7 @@ export async function getAdminLoginDetailsModel(UserName, Password, UserTypeID, 
     try {
         const [rows] = await pool.query('CALL sp_getAdminLoginDetails(?,?,?,?,@ErrorCode)', [UserName, Password, UserTypeID, AuthInfo]);
 
-        if (!rows) {
+        if (!rows[0][0]) {
             return null;
         }
         console.log("rows", rows);
@@ -29,6 +29,36 @@ export async function getAdminLoginDetailsModel(UserName, Password, UserTypeID, 
     } catch (error) {
         console.log(error);
 
+        throw error;
+    }
+}
+
+export async function getDepSlotBookingDetailModel(
+    SlotID,
+    TokenNo,
+    PassportNo,
+    FromDate,
+    ToDate,
+    PageNumber,
+    Type,
+    AuthInfo
+) {
+    try {
+        // Call procedure with output param @ErrorCode
+        const [rows] = await pool.query(
+            "CALL sp_getDepSlotBookingDetails_pagninated(?,?,?,?,?,?,?,?,@ErrorCode)",
+            [FromDate, ToDate, SlotID, TokenNo, PassportNo, Type, AuthInfo, PageNumber]
+        );
+
+        if (!rows[0][0]) {
+            return null;
+        }
+        console.log("rows", rows);
+
+        return rows[0] ?? null;
+
+    } catch (error) {
+        console.error("Error in getDepSlotBookingDetail:", error);
         throw error;
     }
 }
