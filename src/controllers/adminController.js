@@ -175,7 +175,7 @@ export const updateDepBookingAttendance = async (req, res) => {
             AuthInfo
         );
 
-        if (!result) {
+        if (result !== 0) {
             return res.status(404).json({
                 success: false,
                 message: "Booking not found or attendance update failed.",
@@ -185,7 +185,6 @@ export const updateDepBookingAttendance = async (req, res) => {
         return res.status(200).json({
             success: true,
             message: "Booking attendance updated successfully.",
-            data: result,
         });
 
     } catch (error) {

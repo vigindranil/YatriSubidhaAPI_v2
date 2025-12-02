@@ -64,12 +64,14 @@ export async function getDepSlotBookingDetailModel(
 
 export async function updateDepBookingAttendanceModel(BookingID, AuthInfo) {
     try {
-        const response = await pool.query(`CALL sp_updateDepBookingAttendance(?,@ErrorCode)`, [
+        const response = await pool.query(`CALL sp_updateDepBookingAttendance(?,?,@ErrorCode)`, [
             BookingID,
             AuthInfo
         ]);
         const [rows] = await pool.query("SELECT @ErrorCode AS ErrorCode");
-        return response[0][0];
+        console.log("[rows]", rows[0]?.ErrorCode);
+
+        return rows[0]?.ErrorCode;
     } catch (error) {
         throw error;
     }
