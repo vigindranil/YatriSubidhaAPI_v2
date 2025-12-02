@@ -1,4 +1,4 @@
-import { getAdminLoginDetailsModel, getDepartureCountModel, getDepSlotBookingDetailModel } from "../models/adminModel.js";
+import { getAdminLoginDetailsModel, getDepartureCountModel, getDepSlotBookingDetailModel, updateDepBookingAttendanceModel } from "../models/adminModel.js";
 import jwt from "jsonwebtoken";
 
 export async function getDepartureCount(req, res) {
@@ -157,3 +157,43 @@ export async function getAdminBookingReportDetails(req, res) {
         });
     }
 }
+
+export const updateDepBookingAttendance = async (req, res) => {
+    try {
+        const { BookingID, AuthInfo } = req.body;
+
+        if (!BookingID || AuthInfo === undefined) {
+            return res.status(400).json({
+                success: false,
+                message: "Booking ID and AuthInfo are required.",
+            });
+        }
+
+        // Call Model to update attendance
+        const result = await updateDepBookingAttendanceModel(
+            BookingID,
+            AuthInfo
+        );
+
+        if (!result) {
+            return res.status(404).json({
+                success: false,
+                message: "Booking not found or attendance update failed.",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Booking attendance updated successfully.",
+            data: result,
+        });
+
+    } catch (error) {
+        console.error("Controller Error:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Server error",
+            error: error.message,
+        });
+    }
+};

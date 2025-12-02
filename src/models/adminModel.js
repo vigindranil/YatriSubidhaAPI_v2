@@ -15,7 +15,6 @@ export async function getDepartureCountModel(FromDate, ToDate, Type, AuthInfo) {
     }
 }
 
-
 export async function getAdminLoginDetailsModel(UserName, Password, UserTypeID, AuthInfo) {
     try {
         const [rows] = await pool.query('CALL sp_getAdminLoginDetails(?,?,?,?,@ErrorCode)', [UserName, Password, UserTypeID, AuthInfo]);
@@ -59,6 +58,19 @@ export async function getDepSlotBookingDetailModel(
 
     } catch (error) {
         console.error("Error in getDepSlotBookingDetail:", error);
+        throw error;
+    }
+}
+
+export async function updateDepBookingAttendanceModel(BookingID, AuthInfo) {
+    try {
+        const response = await pool.query(`CALL sp_updateDepBookingAttendance(?,@ErrorCode)`, [
+            BookingID,
+            AuthInfo
+        ]);
+        const [rows] = await pool.query("SELECT @ErrorCode AS ErrorCode");
+        return response[0][0];
+    } catch (error) {
         throw error;
     }
 }
