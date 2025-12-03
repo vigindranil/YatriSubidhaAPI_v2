@@ -76,3 +76,20 @@ export async function updateDepBookingAttendanceModel(BookingID, AuthInfo) {
         throw error;
     }
 }
+
+export async function getUserAuthDetailsModel(
+    UserID, AuthInfo
+) {
+    try {
+        // Call procedure with output param @ErrorCode
+        const [rows] = await pool.query(
+            "CALL sp_getUserAuthDetails(?,@ErrorCode)",
+            [UserID]
+        );
+
+        return rows[0] ?? null;
+    } catch (error) {
+        console.error("Error in getUserAuthDetails:", error);
+        throw error;
+    }
+}

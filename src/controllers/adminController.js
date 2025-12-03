@@ -1,4 +1,4 @@
-import { getAdminLoginDetailsModel, getDepartureCountModel, getDepSlotBookingDetailModel, updateDepBookingAttendanceModel } from "../models/adminModel.js";
+import { getAdminLoginDetailsModel, getDepartureCountModel, getDepSlotBookingDetailModel, getUserAuthDetailsModel, updateDepBookingAttendanceModel } from "../models/adminModel.js";
 import jwt from "jsonwebtoken";
 
 export async function getDepartureCount(req, res) {
@@ -185,6 +185,48 @@ export const updateDepBookingAttendance = async (req, res) => {
         return res.status(200).json({
             success: true,
             message: "Booking attendance updated successfully.",
+        });
+
+    } catch (error) {
+        console.error("Controller Error:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Server error",
+            error: error.message,
+        });
+    }
+};
+
+export const getUserAuthDetails = async (req, res) => {
+    try {
+        const { UserID, AuthInfo } = req.body;
+
+        if (!UserID || !AuthInfo) {
+            return res.status(400).json({
+                success: false,
+                message: "User ID and AuthInfo are required.",
+            });
+        }
+
+        // Call Model to update attendance
+        const result = await getUserAuthDetailsModel(
+            UserID,
+            AuthInfo
+        );
+
+        console.log("result", result);
+
+        if (result?.length == 0) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found.",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "User found successfully.",
+            data: result,
         });
 
     } catch (error) {
