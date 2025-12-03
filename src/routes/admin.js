@@ -1,5 +1,5 @@
 import express from "express";
-import { getDepartureCount, getAdminBookingReportDetails, updateDepBookingAttendance, getUserAuthDetails } from "../controllers/adminController.js";
+import { getDepartureCount, getAdminBookingReportDetails, updateDepBookingAttendance, getUserAuthDetails, updateAdminPassword } from "../controllers/adminController.js";
 
 
 const router = express.Router();
