@@ -1,4 +1,4 @@
-import { getAdminLoginDetailsModel, getDepartureCountModel, getDepSlotBookingDetailModel, getUserAuthDetailsModel, updateDepBookingAttendanceModel } from "../models/adminModel.js";
+import { getAdminLoginDetailsModel, getDepartureCountModel, getDepSlotBookingDetailModel, getUserAuthDetailsModel, updateAdminPasswordModel, updateDepBookingAttendanceModel } from "../models/adminModel.js";
 import jwt from "jsonwebtoken";
 
 export async function getDepartureCount(req, res) {
@@ -227,6 +227,42 @@ export const getUserAuthDetails = async (req, res) => {
             success: true,
             message: "User found successfully.",
             data: result,
+        });
+
+    } catch (error) {
+        console.error("Controller Error:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Server error",
+            error: error.message,
+        });
+    }
+};
+
+export const updateAdminPassword = async (req, res) => {
+    try {
+        const { UserID, PreviousPassword, NewPassword } = req.body;
+
+        if (!UserID || !PreviousPassword || !NewPassword) {
+            return res.status(400).json({
+                success: false,
+                message: " UserID, PreviousPassword and NewPassword are required.",
+            });
+        }
+
+        // Call Model to update attendance
+        const result = await updateAdminPasswordModel(UserID, PreviousPassword, NewPassword);
+
+        if (result !== 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Failed to update password.",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Password has been updated successfully.",
         });
 
     } catch (error) {

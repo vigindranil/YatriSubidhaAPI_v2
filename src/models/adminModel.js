@@ -77,6 +77,36 @@ export async function updateDepBookingAttendanceModel(BookingID, AuthInfo) {
     }
 }
 
+export async function updateDepBookingAttendanceModel(BookingID, AuthInfo) {
+    try {
+        const response = await pool.query(`CALL sp_updateDepBookingAttendance(?,?,@ErrorCode)`, [
+            BookingID,
+            AuthInfo
+        ]);
+        const [rows] = await pool.query("SELECT @ErrorCode AS ErrorCode");
+        console.log("[rows]", rows[0]?.ErrorCode);
+
+        return rows[0]?.ErrorCode;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function updateAdminPasswordModel(UserID, PreviousPassword, NewPassword) {
+    try {
+        const response = await pool.query(`CALL sp_updateAdminPassword(?,?,?,@ErrorCode)`, [
+            UserID,
+            PreviousPassword,
+            NewPassword
+        ]);
+        const [rows] = await pool.query("SELECT @ErrorCode AS ErrorCode");
+
+        return rows[0]?.ErrorCode;
+    } catch (error) {
+        throw error;
+    }
+}
+
 export async function getUserAuthDetailsModel(
     UserID, AuthInfo
 ) {
