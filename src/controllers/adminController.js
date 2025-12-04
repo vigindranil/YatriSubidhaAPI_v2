@@ -1,4 +1,4 @@
-import { getAdminLoginDetailsModel, getDepartureCountModel, getDepSlotBookingDetailModel, getUserAuthDetailsModel, updateAdminPasswordModel, updateDepBookingAttendanceModel } from "../models/adminModel.js";
+import { getAdminLoginDetailsModel, getDepartureCountModel, getDepSlotBookingDetailModel, getUserAuthDetailsModel, updateAdminPasswordModel, updateDepBookingAttendanceModel, updateDepSlotCapacityModel } from "../models/adminModel.js";
 import jwt from "jsonwebtoken";
 
 export async function getDepartureCount(req, res) {
@@ -256,13 +256,85 @@ export const updateAdminPassword = async (req, res) => {
         if (result !== 0) {
             return res.status(404).json({
                 success: false,
-                message: "Failed to update password.",
+                message: "Old password is incorrect.",
             });
         }
 
         return res.status(200).json({
             success: true,
             message: "Password has been updated successfully.",
+        });
+
+    } catch (error) {
+        console.error("Controller Error:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Server error",
+            error: error.message,
+        });
+    }
+};
+
+export const updateDepSlotCapacity = async (req, res) => {
+    try {
+        const { SlotID, SlotCapacity, AuthInfo } = req.body;
+
+        if (!SlotID || !SlotCapacity || !AuthInfo) {
+            return res.status(400).json({
+                success: false,
+                message: " SlotID, SlotCapacity and AuthInfo are required.",
+            });
+        }
+
+        // Call Model to update attendance
+        const result = await updateDepSlotCapacityModel(SlotID, SlotCapacity, AuthInfo);
+
+        if (result !== 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Failed to update slot capacity, Please try again.",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Slot capacity updated successfully.",
+        });
+
+    } catch (error) {
+        console.error("Controller Error:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Server error",
+            error: error.message,
+        });
+    }
+};
+
+export const updateDepSlotActiveStatus = async (req, res) => {
+    try {
+        const { FromDate, ToDate, SlotID, ActiveStatus, AuthInfo } = req.body;
+
+        if (!FromDate || !ToDate || !SlotID || !AuthInfo) {
+            return res.status(400).json({
+                success: false,
+                message: " FromDate, ToDate, SlotID, ActiveStatus and AuthInfo are required.",
+            });
+        }
+
+        // Call Model to update attendance
+        const result = await updateDepSlotActiveStatusModel(FromDate, ToDate, SlotID, ActiveStatus, AuthInfo);
+
+        if (result !== 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Failed to update slot active status, Please try again.",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Slot active status updated successfully.",
         });
 
     } catch (error) {
