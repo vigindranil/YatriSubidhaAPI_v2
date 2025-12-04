@@ -113,7 +113,7 @@ export async function getUserAuthDetailsModel(
 export async function updateDepSlotCapacityModel(SlotID, SlotCapacity, JourneyTypeID, AuthInfo) {
     try {
         const response = await pool.query(`CALL sp_updateDepSlotCapacity(?,?,?,?,@ErrorCode)`, [
-            SlotID, SlotCapacity, JourneyTypeID, AuthInfo
+            SlotID, JourneyTypeID, SlotCapacity, AuthInfo
         ]);
         const [rows] = await pool.query("SELECT @ErrorCode AS ErrorCode");
 
