@@ -110,10 +110,10 @@ export async function getUserAuthDetailsModel(
     }
 }
 
-export async function updateDepSlotCapacityModel(SlotID, SlotCapacity, AuthInfo) {
+export async function updateDepSlotCapacityModel(SlotID, SlotCapacity, JourneyTypeID, AuthInfo) {
     try {
-        const response = await pool.query(`CALL sp_updateDepSlotCapacity(?,?,?,@ErrorCode)`, [
-            SlotID, SlotCapacity, AuthInfo
+        const response = await pool.query(`CALL sp_updateDepSlotCapacity(?,?,?,?,@ErrorCode)`, [
+            SlotID, SlotCapacity, JourneyTypeID, AuthInfo
         ]);
         const [rows] = await pool.query("SELECT @ErrorCode AS ErrorCode");
 
@@ -124,10 +124,10 @@ export async function updateDepSlotCapacityModel(SlotID, SlotCapacity, AuthInfo)
     }
 }
 
-export async function updateDepSlotActiveStatusModel(FromDate, ToDate, SlotID, ActiveStatus, AuthInfo) {
+export async function updateDepSlotActiveStatusModel(FromDate, ToDate, SlotID, ActiveStatus, JourneyTypeID, AuthInfo) {
     try {
-        const response = await pool.query(`CALL sp_updateDepSlotActiveStatus(?,?,?,?,?,@ErrorCode)`, [
-            FromDate, ToDate, SlotID, ActiveStatus, AuthInfo
+        const response = await pool.query(`CALL sp_updateDepSlotActiveStatus(?,?,?,?,?,?,@ErrorCode)`, [
+            FromDate, ToDate, SlotID, ActiveStatus, JourneyTypeID, AuthInfo
         ]);
         const [rows] = await pool.query("SELECT @ErrorCode AS ErrorCode");
 

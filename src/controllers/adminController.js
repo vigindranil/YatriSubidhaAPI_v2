@@ -1,4 +1,4 @@
-import { getAdminLoginDetailsModel, getDepartureCountModel, getDepSlotBookingDetailModel, getUserAuthDetailsModel, updateAdminPasswordModel, updateDepBookingAttendanceModel, updateDepSlotCapacityModel } from "../models/adminModel.js";
+import { getAdminLoginDetailsModel, getDepartureCountModel, getDepSlotBookingDetailModel, getUserAuthDetailsModel, updateAdminPasswordModel, updateDepBookingAttendanceModel, updateDepSlotActiveStatusModel, updateDepSlotCapacityModel } from "../models/adminModel.js";
 import jwt from "jsonwebtoken";
 
 export async function getDepartureCount(req, res) {
@@ -277,17 +277,17 @@ export const updateAdminPassword = async (req, res) => {
 
 export const updateDepSlotCapacity = async (req, res) => {
     try {
-        const { SlotID, SlotCapacity, AuthInfo } = req.body;
+        const { SlotID, SlotCapacity, JourneyTypeID, AuthInfo } = req.body;
 
-        if (!SlotID || !SlotCapacity || !AuthInfo) {
+        if (!SlotID || !SlotCapacity || !JourneyTypeID || !AuthInfo) {
             return res.status(400).json({
                 success: false,
-                message: " SlotID, SlotCapacity and AuthInfo are required.",
+                message: " SlotID, SlotCapacity, JourneyTypeID and AuthInfo are required.",
             });
         }
 
         // Call Model to update attendance
-        const result = await updateDepSlotCapacityModel(SlotID, SlotCapacity, AuthInfo);
+        const result = await updateDepSlotCapacityModel(SlotID, SlotCapacity, JourneyTypeID, AuthInfo);
 
         if (result !== 0) {
             return res.status(404).json({
@@ -313,9 +313,9 @@ export const updateDepSlotCapacity = async (req, res) => {
 
 export const updateDepSlotActiveStatus = async (req, res) => {
     try {
-        const { FromDate, ToDate, SlotID, ActiveStatus, AuthInfo } = req.body;
+        const { FromDate, ToDate, SlotID, ActiveStatus, JourneyTypeID, AuthInfo } = req.body;
 
-        if (!FromDate || !ToDate || !SlotID || !AuthInfo) {
+        if (!FromDate || !ToDate || !SlotID || !JourneyTypeID || !AuthInfo) {
             return res.status(400).json({
                 success: false,
                 message: " FromDate, ToDate, SlotID, ActiveStatus and AuthInfo are required.",
@@ -323,18 +323,18 @@ export const updateDepSlotActiveStatus = async (req, res) => {
         }
 
         // Call Model to update attendance
-        const result = await updateDepSlotActiveStatusModel(FromDate, ToDate, SlotID, ActiveStatus, AuthInfo);
+        const result = await updateDepSlotActiveStatusModel(FromDate, ToDate, SlotID, ActiveStatus, JourneyTypeID, AuthInfo);
 
         if (result !== 0) {
             return res.status(404).json({
                 success: false,
-                message: "Failed to update slot active status, Please try again.",
+                message: "Failed to update slot status, Please try again.",
             });
         }
 
         return res.status(200).json({
             success: true,
-            message: "Slot active status updated successfully.",
+            message: `Slot-${SlotID} ${ActiveStatus === 1 ? "activated" : "deactivated"} from ${FromDate} to ${ToDate} updated successfully.`,
         });
 
     } catch (error) {
