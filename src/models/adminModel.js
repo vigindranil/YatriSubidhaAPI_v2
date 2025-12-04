@@ -109,3 +109,31 @@ export async function getUserAuthDetailsModel(
         throw error;
     }
 }
+
+export async function updateDepSlotCapacityModel(SlotID, SlotCapacity, AuthInfo) {
+    try {
+        const response = await pool.query(`CALL sp_updateDepSlotCapacity(?,?,?,@ErrorCode)`, [
+            SlotID, SlotCapacity, AuthInfo
+        ]);
+        const [rows] = await pool.query("SELECT @ErrorCode AS ErrorCode");
+
+
+        return rows[0]?.ErrorCode;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function updateDepSlotActiveStatusModel(FromDate, ToDate, SlotID, ActiveStatus, AuthInfo) {
+    try {
+        const response = await pool.query(`CALL sp_updateDepSlotActiveStatus(?,?,?,?,?,@ErrorCode)`, [
+            FromDate, ToDate, SlotID, ActiveStatus, AuthInfo
+        ]);
+        const [rows] = await pool.query("SELECT @ErrorCode AS ErrorCode");
+
+
+        return rows[0]?.ErrorCode;
+    } catch (error) {
+        throw error;
+    }
+}
