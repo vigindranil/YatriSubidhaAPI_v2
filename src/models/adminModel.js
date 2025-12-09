@@ -153,3 +153,21 @@ export async function getCurrentQueueReportModel(
         throw error;
     }
 }
+
+export async function getSlotWiseArrDeptBookingCountForAdminModel(
+    FromDate, ToDate, UserID
+) {
+    try {
+        const [rows] = await pool.query(
+            "CALL sp_getSlotWiseArrDeptBookingCountForAdmin(?,?,?)",
+            [FromDate, ToDate, UserID]
+        );
+
+        console.log("rows", rows);
+
+        return rows[0] ?? null;
+    } catch (error) {
+        console.error("Error in getSlotWiseArrDeptBookingCountForAdmin:", error);
+        throw error;
+    }
+}
