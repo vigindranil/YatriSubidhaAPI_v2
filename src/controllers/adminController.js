@@ -1,4 +1,4 @@
-import { getAdminLoginDetailsModel, getCurrentQueueReportModel, getDepartureCountModel, getDepSlotBookingDetailModel, getSlotWiseArrDeptBookingCountForAdminModel, getUserAuthDetailsModel, updateAdminPasswordModel, updateDepBookingAttendanceModel, updateDepSlotActiveStatusModel, updateDepSlotCapacityModel } from "../models/adminModel.js";
+import { getAdminDashboardCountModel, getAdminLoginDetailsModel, getCurrentQueueReportModel, getDepartureCountModel, getDepSlotBookingDetailModel, getSlotWiseArrDeptBookingCountForAdminModel, getUserAuthDetailsModel, updateAdminPasswordModel, updateDepBookingAttendanceModel, updateDepSlotActiveStatusModel, updateDepSlotCapacityModel } from "../models/adminModel.js";
 import jwt from "jsonwebtoken";
 
 export async function getDepartureCount(req, res) {
@@ -422,6 +422,49 @@ export async function getSlotWiseArrDeptBookingCountForAdmin(req, res) {
         return res.status(200).json({
             success: true,
             message: "Booking report fetched successfully",
+            data: result,
+        });
+
+    } catch (error) {
+        console.error("Controller Error:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Server error",
+            error: error.message,
+        });
+    }
+}
+
+export async function getAdminDashboardCount(req, res) {
+    try {
+        const { CurrentDate, UserID } = req.body;
+
+        // Validate Required Fields
+        if (!CurrentDate || !UserID) {
+            return res.status(400).json({
+                success: false,
+                message: "Missing required fields (CurrentDate, UserID required)",
+            });
+        }
+
+        // Call Model - SlotID, TokenNo, PassportNo passed empty as per requirement
+        const result = await getAdminDashboardCountModel(
+            CurrentDate,
+            UserID
+        );
+
+        // Empty Result
+        if (!result || result.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No records found",
+            });
+        }
+
+        // Success
+        return res.status(200).json({
+            success: true,
+            message: "Data fetched successfully",
             data: result,
         });
 

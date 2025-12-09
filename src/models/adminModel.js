@@ -171,3 +171,19 @@ export async function getSlotWiseArrDeptBookingCountForAdminModel(
         throw error;
     }
 }
+
+export async function getAdminDashboardCountModel(
+    CurrentDate, UserID
+) {
+    try {
+        const [rows] = await pool.query(
+            "CALL sp_getAdminDashboardCount(?,?)",
+            [CurrentDate, UserID]
+        );
+
+        return rows[0] ?? null;
+    } catch (error) {
+        console.error("Error in getAdminDashboardCount:", error);
+        throw error;
+    }
+}

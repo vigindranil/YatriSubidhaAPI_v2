@@ -1,5 +1,5 @@
 import express from "express";
-import { getDepartureCount, getAdminBookingReportDetails, updateDepBookingAttendance, getUserAuthDetails, updateAdminPassword, updateDepSlotCapacity, updateDepSlotActiveStatus, getCurrentQueueReportDetails, getSlotWiseArrDeptBookingCountForAdmin } from "../controllers/adminController.js";
+import { getDepartureCount, getAdminBookingReportDetails, updateDepBookingAttendance, getUserAuthDetails, updateAdminPassword, updateDepSlotCapacity, updateDepSlotActiveStatus, getCurrentQueueReportDetails, getSlotWiseArrDeptBookingCountForAdmin, getAdminDashboardCount } from "../controllers/adminController.js";
 
 
 const router = express.Router();
@@ -13,5 +13,6 @@ router.post("/update-slot-capacity", updateDepSlotCapacity);
 router.post("/update-slot-active-status", updateDepSlotActiveStatus);
 router.post("/get-current-queue-report-details", getCurrentQueueReportDetails);
 router.post("/get-slot-wise-arrival-departure-booking-count", getSlotWiseArrDeptBookingCountForAdmin);
+router.post("/get-admin-dashboard-count", getAdminDashboardCount);
 
 export default router;
