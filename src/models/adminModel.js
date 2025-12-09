@@ -19,7 +19,7 @@ export async function getAdminLoginDetailsModel(UserName, Password, UserTypeID, 
     try {
         const [rows] = await pool.query('CALL sp_getAdminLoginDetails(?,?,?,?,@ErrorCode)', [UserName, Password, UserTypeID, AuthInfo]);
 
-        if (!rows[0][0]) {
+        if (!rows[0]?.length) {
             return null;
         }
         console.log("rows", rows);
@@ -134,6 +134,22 @@ export async function updateDepSlotActiveStatusModel(FromDate, ToDate, SlotID, A
 
         return rows[0]?.ErrorCode;
     } catch (error) {
+        throw error;
+    }
+}
+
+export async function getCurrentQueueReportModel(
+    FromDate, ToDate, UserID
+) {
+    try {
+        const [rows] = await pool.query(
+            "CALL sp_getCurrentQueueReport(?,?,?)",
+            [FromDate, ToDate, UserID]
+        );
+
+        return rows[0] ?? null;
+    } catch (error) {
+        console.error("Error in getCurrentQueueReport:", error);
         throw error;
     }
 }
