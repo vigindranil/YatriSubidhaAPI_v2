@@ -1,6 +1,7 @@
 import { generateOTPModel, validateOTPModel } from "../models/authModel.js";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
+import { sendSMSInternally } from "./thirdPartyAPIController.js";
 
 export async function generateOTP(req, res) {
   try {
@@ -21,37 +22,47 @@ export async function generateOTP(req, res) {
     const { IsOTP, ErrorCode } = result;
 
     if (userNameTypeID == 1) {
-      return res.status(400).json({ success: false, message: "Mobile number based login is currently disabled" });
+      const smstext = `OTP to login in Yatri Suvidha Application is ${IsOTP} DITE GoWB`;
+      const mobileNumber = userName;
+      const smsCategory = "login message";
+      const tpid = "1307172596406664446";
+
+      const smsStatus = await sendSMSInternally(
+        smstext,
+        mobileNumber,
+        smsCategory,
+        tpid
+      );
     } else {
       // 🔧 Setup Mail Transporter
-      // const transporter = nodemailer.createTransport({
-      //   host: process.env.MAIL_HOST,       // smtp.gmail.com / your smtp host
-      //   port: process.env.MAIL_PORT,       // 465 (secure) / 587 (TLS)
-      //   secure: true,                     // true for 465, false for 587/others
-      //   auth: {
-      //     user: process.env.MAIL_USER,     // email address
-      //     pass: process.env.MAIL_PASS      // app password / smtp password
-      //   },
-      //   tls: {
-      //     rejectUnauthorized: false
-      //   }
-      // });
+      const transporter = nodemailer.createTransport({
+        host: process.env.MAIL_HOST,       // smtp.gmail.com / your smtp host
+        port: process.env.MAIL_PORT,       // 465 (secure) / 587 (TLS)
+        secure: true,                     // true for 465, false for 587/others
+        auth: {
+          user: process.env.MAIL_USER,     // email address
+          pass: process.env.MAIL_PASS      // app password / smtp password
+        },
+        tls: {
+          rejectUnauthorized: false
+        }
+      });
 
-      // const mailOptions = {
-      //   from: `Team YatriSubidha`,
-      //   to: userName,                      // user email
-      //   subject: "Yatri Subidha Portal",
-      //   html: `
-      //     <h2>Login Verification Code</h2>
-      //     <p>Your OTP for login is:</p>
-      //     <h1 style="color:#3085ee">${IsOTP}</h1>
-      //     <p>This OTP is valid for 5 minutes.</p>
-      //     <br>
-      //     <p>Regards,<br>Land Ports Authority of India</p>
-      //   `
-      // };
+      const mailOptions = {
+        from: `Team YatriSubidha`,
+        to: userName,                      // user email
+        subject: "Yatri Subidha Portal",
+        html: `
+          <h2>Login Verification Code</h2>
+          <p>Your OTP for login is:</p>
+          <h1 style="color:#3085ee">${IsOTP}</h1>
+          <p>This OTP is valid for 5 minutes.</p>
+          <br>
+          <p>Regards,<br>Land Ports Authority of India</p>
+        `
+      };
 
-      // await transporter.sendMail(mailOptions);
+      await transporter.sendMail(mailOptions);
     }
 
     if (ErrorCode !== 0) {
