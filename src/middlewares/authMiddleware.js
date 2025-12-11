@@ -12,11 +12,14 @@ const verifyToken = async (req, res, next) => {
                 .json({ message: "Access denied! Unauthorized access." });
         }
         const decoded = jwt.verify(token, JWT_SECRET); // Verify the token
-        if ((decoded?.UserID || decoded?.user_id) != req.body.UserID) {
-            return res
-                .status(401)
-                .json({ message: "Access denied! Invalid user." });
-        }
+        console.log("decoded", decoded);
+        // let userID = decoded?.UserID || decoded?.user_id;
+
+        // if (userID != req.body.UserID) {
+        //     return res
+        //         .status(401)
+        //         .json({ message: "Access denied! Invalid user." });
+        // }
         next(); // Proceed to the next middleware or route handler
     } catch (error) {
         res.status(401).json({ status: 1, message: "Invalid or expired token." });
