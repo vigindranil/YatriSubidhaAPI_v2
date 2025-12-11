@@ -51,14 +51,18 @@ export async function getDepartureBookingDetailsByTokenNumber(req, res) {
         .status(400)
         .json({ success: false, message: "Missing required fields" });
     }
-    const result = await getDepartureBookingDetailsByTokenNumberModel(TokenNo, AuthInfo);
+    const tokenList = TokenNo.split(",").map(t => t.trim());
 
-    if (!result) {
+    const results = await Promise.all(
+      tokenList.map(token => getDepartureBookingDetailsByTokenNumberModel(token, AuthInfo))
+    );
+
+    if (!results) {
       return res
         .status(500)
         .json({ success: false, message: "Failed to fetch booking details" });
     }
-    if (result.length === 0) {
+    if (results.length === 0) {
       return res
         .status(400)
         .json({ success: false, message: "No booking details found", data: null });
@@ -67,7 +71,7 @@ export async function getDepartureBookingDetailsByTokenNumber(req, res) {
     return res.status(200).json({
       success: true,
       message: "Booking details fetched successfully",
-      data: result
+      data: results.flat()
     });
   } catch (error) {
     return res.status(500).json({

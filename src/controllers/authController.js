@@ -9,6 +9,7 @@ export async function generateOTP(req, res) {
       return res.status(400).json({ success: false, message: "Invalid request" });
     }
     const { userNameTypeID, userName, authInfo } = req.body;
+
     if (!userNameTypeID || !userName || !authInfo) {
       return res.status(400).json({ success: false, message: "Missing required fields" });
     }

@@ -8,6 +8,7 @@ import slotRoute from './src/routes/slotRoute.js';
 import userRoute from './src/routes/userRoute.js';
 import adminRoute from './src/routes/admin.js';
 import adminAuthRoute from './src/routes/adminAuth.js';
+import verifyToken from "./src/middlewares/authMiddleware.js";
 
 dotenv.config();
 // const authRoutes = require('./src/routes/auth');
@@ -20,9 +21,9 @@ app.use(cors());
 // app.use('/api/auth', authRoutes);
 app.use('/api/auth', authRoute);
 app.use('/api/admin/auth', adminAuthRoute);
-app.use('/api/user/slot', slotRoute);
-app.use('/api/user/', userRoute);
-app.use('/api/admin', adminRoute);
+app.use('/api/user/slot', verifyToken, slotRoute);
+app.use('/api/user/', verifyToken, userRoute);
+app.use('/api/admin', verifyToken, adminRoute);
 
 app.get('/', (req, res) => res.send('API is running'));
 
