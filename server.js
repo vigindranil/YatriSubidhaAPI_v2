@@ -19,7 +19,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
-app.use(encryptResponse);  // 2. Encrypt outgoing
+// app.use(encryptResponse);  // 2. Encrypt outgoing
 // routes
 // app.use('/api/auth', authRoutes);
 app.use('/api/auth', authRoute);

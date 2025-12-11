@@ -15,7 +15,6 @@ export default function encryptResponse(req, res, next) {
     res.json = function (data) {
         try {
             const encrypted = encrypt(data);
-
             return oldJson.call(res, { data: encrypted });
         } catch (err) {
             console.error("❌ Encryption Error:", err);

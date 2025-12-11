@@ -12,7 +12,7 @@ const verifyToken = async (req, res, next) => {
                 .json({ message: "Access denied! Unauthorized access." });
         }
         const decoded = jwt.verify(token, JWT_SECRET); // Verify the token
-        if (decoded?.UserID != req.body.UserID) {
+        if ((decoded?.UserID || decoded?.user_id) != req.body.UserID) {
             return res
                 .status(401)
                 .json({ message: "Access denied! Invalid user." });
